@@ -12,7 +12,10 @@ public class isEmail {
         }
         
         Pattern p;
-        p = Pattern.compile("[a-zA-Z]{1}[a-zA-Z\\d\\u002E\\u005F]+@([a-zA-Z]+\\u002E){1,2}((net)|(com)|(org)|(ru))");
+        String beg = "[a-zA-Z]{1}[a-zA-Z\\d]*([\\u002E\\u005F]{1}[a-zA-Z\\d]+)*"; /*до @*/
+        String mid = "@([a-zA-Z]+\\u002E)+"; /*@ и домены (кроме первого уровня) + точка*/
+        String end = "((info)|(mobi)|(name)|([a-zA-Z]{1,3}))"; /*домены первого уровня*/
+        p = Pattern.compile(beg+mid+end);
         Matcher m = p.matcher(str);
         
         return m.matches();
