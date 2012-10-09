@@ -16,7 +16,7 @@ public class PalindromeCaseDep extends Palindrome
 	fromBeg = 0;
 	result = true;
 	
-	while(fromEnd > fromBeg && result == true)
+	while(fromEnd > fromBeg && result)
 	{
 		if(!Character.isLetter(str.charAt(fromEnd)))
 		{

@@ -6,8 +6,6 @@ public class PalindromeCaseIndep extends Palindrome
     @Override
     public boolean isPalindrome(String str) 
     {
-        str = str.toLowerCase();
-        
         int fromBeg;
 	int fromEnd;
 	boolean result;
@@ -16,21 +14,21 @@ public class PalindromeCaseIndep extends Palindrome
 	fromBeg = 0;
 	result = true;
 	
-	while(fromEnd > fromBeg && result == true)
+	while(fromEnd > fromBeg && result)
 	{
-		if(!Character.isLetter(str.charAt(fromEnd)))
+		if(!Character.isLetter(Character.toLowerCase(str.charAt(fromEnd))))
 		{
 			fromEnd = fromEnd - 1;
 		}
 	
-		if(!Character.isLetter(str.charAt(fromBeg)))
+		if(!Character.isLetter(Character.toLowerCase(str.charAt(fromBeg))))
 		{
 			fromBeg = fromBeg + 1;
 		}
 		
-		if(Character.isLetter(str.charAt(fromEnd)) && Character.isLetter(str.charAt(fromBeg)))
+		if(Character.isLetter(Character.toLowerCase(str.charAt(fromEnd))) && Character.isLetter(Character.toLowerCase(str.charAt(fromBeg))))
 		{
-			if(str.charAt(fromEnd) != str.charAt(fromBeg))
+			if(Character.toLowerCase(str.charAt(fromEnd)) != Character.toLowerCase(str.charAt(fromBeg)))
 			{
 				result = false;
 			}
