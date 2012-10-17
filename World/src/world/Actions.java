@@ -6,4 +6,8 @@ public enum Actions {
     EAT,
     HEAL,
     BLOW,
+    MEOW,
+    HISS,
+    BARK,
+    GROWL
 }

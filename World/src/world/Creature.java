@@ -10,21 +10,17 @@ public class Creature {
     protected String NameClassAc;
     protected States State;
     
-    public void handler(Actions a){};
+    public void handler(Actions a, Creature c){};
+    public void action(Actions a, Creature c){};
     
     public void eat(Creature s){
-        if(s.State == States.DEAD){
-            System.out.println(NameClass + " " + Name + " cъел " + s.NameClassAc + " " + s.NameAc);
-        }
-        else {
-            System.out.println(NameClass  + " " + Name + " попытался съесть " + s.NameClassAc + " " + s.NameAc);
-        }
-        s.handler(Actions.EAT);
+        this.action(Actions.EAT, s);
+        s.handler(Actions.EAT, this);
     }
     
     public void attack(Creature s) {
-        System.out.println(NameClass +" " + Name + " атакует " +s.NameClassAc  +" "+ s.NameAc);
-        s.handler(Actions.ATTACK);
+        this.action(Actions.ATTACK, s);
+        s.handler(Actions.ATTACK, this);
     }
         
 }
