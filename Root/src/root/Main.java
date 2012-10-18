@@ -7,6 +7,6 @@ public class Main {
     
     public static void main(String[] args) throws IOException, Exception {
         Root p = new Root();
-        System.out.println(p.getRoot(22));
+        System.out.println(p.getRoot(0.1e-20));
     }
 }
