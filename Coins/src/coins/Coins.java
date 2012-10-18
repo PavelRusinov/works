@@ -20,11 +20,11 @@ public class Coins {
         int i;
         for (i = 0; i < coins.length; i++){
             if(coins[i] <= 0){
-                throw new Exception("Illegal argument");
+                throw new IllegalArgumentException("Illegal argument");
             }
         }
         if(sum <= 0){
-            throw new Exception("Illegal argument");
+            throw new IllegalArgumentException("Illegal argument");
         }
             
         return countWays(sum, coins, coins.length);
