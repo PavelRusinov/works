@@ -2,18 +2,28 @@
 package partly.cloudy;
 
 public class Cloud {
-    private Daylight daylight = new Daylight();
-    private Luminary luminary = new Luminary();
-    private Wind wind = new Wind();
-
+    private IDaylight daylight;
+    private ILuminary luminary;
+    private IWind wind;
+    
+    public Cloud(IDaylight d, ILuminary l, IWind w){
+        daylight = d;
+        luminary = l;
+        wind = w;
+    }
+    
     private Creature internalCreate() throws NotImplementedException
     {
-      if (luminary.isShining()){
-          if(daylight.current() == DaylightType.Morning){
-              if(wind.WindStrength() <= 2){
+        boolean currentLuminary = luminary.isShining();
+        DaylightType currentDaylight = daylight.current();
+        int currentWindStr = wind.WindStrength();
+        
+        if (currentLuminary){
+          if(currentDaylight == DaylightType.Morning){
+              if(currentWindStr <= 2){
                   return new Creature(CreatureType.Puppy);
               }
-              else if(wind.WindStrength() >= 6 && wind.WindStrength() <= 7){
+              else if(currentWindStr >= 6 && currentWindStr <= 7){
                   return new Creature(CreatureType.Bearcub);
               }
               else{
@@ -21,11 +31,11 @@ public class Cloud {
               }
           }
           
-          if(daylight.current() == DaylightType.Noon){
-              if(wind.WindStrength() <= 2){
+          if(currentDaylight == DaylightType.Noon){
+              if(currentWindStr <= 2){
                   return new Creature(CreatureType.Puppy);
               }
-              else if(wind.WindStrength() >= 8 && wind.WindStrength() <= 10){
+              else if(currentWindStr >= 8 && currentWindStr <= 10){
                   return new Creature(CreatureType.Hedgehog);
               }
               else{
@@ -33,11 +43,11 @@ public class Cloud {
               }
           }
           
-          if(daylight.current() == DaylightType.Evening){
-              if(wind.WindStrength() >= 3 && wind.WindStrength() <= 5){
+          if(currentDaylight == DaylightType.Evening){
+              if(currentWindStr >= 3 && currentWindStr <= 5){
                   return new Creature(CreatureType.Kitten);
               }
-              else if(wind.WindStrength() >= 8 && wind.WindStrength() <= 10){
+              else if(currentWindStr >= 8 && currentWindStr <= 10){
                   return new Creature(CreatureType.Hedgehog);
               }
               else{
@@ -45,11 +55,11 @@ public class Cloud {
               }
           }
           
-          if(daylight.current() == DaylightType.Night){
-              if(wind.WindStrength() >= 3 && wind.WindStrength() <= 5){
+          if(currentDaylight == DaylightType.Night){
+              if(currentWindStr >= 3 && currentWindStr <= 5){
                   return new Creature(CreatureType.Kitten);
               }
-              else if(wind.WindStrength() >= 6 && wind.WindStrength() <= 7){
+              else if(currentWindStr >= 6 && currentWindStr <= 7){
                   return new Creature(CreatureType.Bearcub);
               }
               else{
@@ -58,35 +68,35 @@ public class Cloud {
           }
       }
       else{
-          if(daylight.current() == DaylightType.Morning){
-              if(wind.WindStrength() >= 0 && wind.WindStrength() <= 4){
+          if(currentDaylight == DaylightType.Morning){
+              if(currentWindStr >= 0 && currentWindStr <= 4){
                   return new Creature(CreatureType.Piglet);
               }
               else{
                   return new Creature(CreatureType.Baloon);
               }
           }
-          if(daylight.current() == DaylightType.Noon){
-              if(wind.WindStrength() >= 0 && wind.WindStrength() <= 4){
+          if(currentDaylight == DaylightType.Noon){
+              if(currentWindStr >= 0 && currentWindStr <= 4){
                   return new Creature(CreatureType.Piglet);
               }
-              else if(wind.WindStrength() >= 5 && wind.WindStrength() <= 7){
+              else if(currentWindStr >= 5 && currentWindStr <= 7){
                   return new Creature(CreatureType.Bat);
               }
               else{
                   return new Creature(CreatureType.Baloon);
               }
           }
-          if(daylight.current() == DaylightType.Evening){
-              if(wind.WindStrength() >= 5 && wind.WindStrength() <= 7){
+          if(currentDaylight == DaylightType.Evening){
+              if(currentWindStr >= 5 && currentWindStr <= 7){
                   return new Creature(CreatureType.Bat);
               }
               else{
                   return new Creature(CreatureType.Baloon);
               }
           }
-          if(daylight.current() == DaylightType.Night){
-              if(wind.WindStrength() >= 0 && wind.WindStrength() <= 4){
+          if(currentDaylight == DaylightType.Night){
+              if(currentWindStr >= 0 && currentWindStr <= 4){
                   return new Creature(CreatureType.Piglet);
               }
               else{
@@ -104,8 +114,21 @@ public class Cloud {
     public Creature create() throws NotImplementedException
     {
       Creature creature = internalCreate();
-      Magic magic = new Magic();
-      magic.callDaemon(creature.getCreatureType());
+      IMagic magic = new Magic();
+      switch (creature.getCreatureType()) {
+          case Puppy:                
+          case Piglet:               
+          case Baloon:                    
+              magic.callDeamon(creature.getCreatureType());  
+              break;                
+          case Kitten:                
+          case Hedgehog:                
+          case Bat:                  
+          case Bearcub:                    
+              magic.callStork(creature.getCreatureType());  
+              break;
+      }        
+    
 
       return creature;
     }

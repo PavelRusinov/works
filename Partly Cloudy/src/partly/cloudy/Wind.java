@@ -1,6 +1,13 @@
 
 package partly.cloudy;
 
-public interface Wind {
-    public int WindStrength();
+import java.util.Random;
+
+public class Wind implements IWind{
+    private Random r = new Random();
+    
+    @Override
+    public int WindStrength(){
+        return r.nextInt() % 10;
+    }
 }
