@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 public class Stack {
     private int head;
-    private ArrayList<Braces> list;
+    private ArrayList<Brace> list;
     
-    public Braces pop() throws Exception{
+    public Brace pop() throws Exception{
         if (head < 0){
-            return Braces.NONE;
+            return new Brace(BraceType.NONE);
         }
-        Braces value = list.get(head);
+        Brace value = list.get(head);
         head--;
         return value;
     }
     
-    public void push(Braces a){
+    public void push(Brace a){
         head++;
         list.add(head, a);
     }
