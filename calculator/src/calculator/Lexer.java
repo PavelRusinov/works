@@ -49,9 +49,6 @@ public class Lexer {
                     case '\n': currlexem = LexemValue.EOL;
                                   p++;
                                   break;
-                    case '\0': currlexem = LexemValue.EOL;
-                                  p++;
-                                  break;
                     case '.': currlexem = LexemValue.EOL;
                                   p++;
                                   break;

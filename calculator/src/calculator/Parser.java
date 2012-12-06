@@ -7,14 +7,15 @@ import hashtable.*;
 public class Parser {
     Lexer lexer;
     HashTable h;
+    String[] expressions;
     
-    public Parser(Lexer l){
-        lexer = l;
+    public Parser(String[] e){
+        lexer = new Lexer();
+        expressions = e;
         h = new HashTable(500);
     }
     
     private int factor() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException{
-        
         if(lexer.getCurrLexem() == LexemValue.NUMBER){
              int res = lexer.getLexemValue();
              lexer.nextlexem();
@@ -79,23 +80,32 @@ public class Parser {
         return left;
     }
 
-    public int parse() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException{
-        lexer.nextlexem();
-        if(lexer.futurelexem() == LexemValue.EQS){
-            String var = lexer.getVariableName();
+    public int[] parse() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException{
+        int l = expressions.length;
+        int result[] = new int[l];
+        int i;
+        for(i = 0; i < l; i++){
+            lexer.newExpr(expressions[i]+"\n");
             lexer.nextlexem();
-            lexer.nextlexem();
-            int res = expr();
-            if (lexer.getCurrLexem() != LexemValue.EOL){
-                throw new NoOperatorException();
+            if(lexer.futurelexem() == LexemValue.EQS){
+                String id = lexer.getVariableName();
+                lexer.nextlexem();
+                lexer.nextlexem();
+                int res = expr();
+                if (lexer.getCurrLexem() != LexemValue.EOL){
+                    throw new NoOperatorException();
+                }
+                h.put(id, (int) res);
+                result[i] = res;
+            }else{
+                int res = expr();
+                if (lexer.getCurrLexem() != LexemValue.EOL){
+                    throw new NoOperatorException();
+                }
+                result[i] = res;
             }
-            h.put(var, (int) res);
-            return res;
         }
-        int res = expr();
-	if (lexer.getCurrLexem() != LexemValue.EOL){
-            throw new NoOperatorException();
-	}
-	return res;	
+        return result;
     }
 }
+    
