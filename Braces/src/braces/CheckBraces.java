@@ -1,5 +1,7 @@
 package braces;
 
+import java.util.Stack;
+
 public class CheckBraces {
     
     public Stack stack = new Stack();
@@ -8,12 +10,14 @@ public class CheckBraces {
     private int leng;
     
     private Brace readXml() throws Exception{
-        int i = p;
+        
         boolean close = false;
         if(s.charAt(p) == '/'){
             close = true;
+            p++;
         }
-        p++;
+        
+        int i = p;
         while (p < leng && Character.isLetter(s.charAt(p))){
             p++;
         }
@@ -21,14 +25,14 @@ public class CheckBraces {
         while (p < leng && s.charAt(p) != '/' && s.charAt(p) != '>'){
             p++;
         }
-        if(p >= leng) {throw new Exception();}
+        if(p >= leng) {throw new BraceWithoutEndException();}
         if(s.charAt(p) == '/'){
             p++;
             if(p < leng && s.charAt(p) == '>' && !close){
                 p++;
                 return new Brace(BraceType.XML_OPCL);
             }
-            else {throw new Exception();}
+            else {throw new BraceWithoutEndException();}
         }
         if(s.charAt(p) == '>'){
             p++;
@@ -37,52 +41,63 @@ public class CheckBraces {
             }
             else{return new XmlOpen(name);}
         }
-        throw new Exception();
+        throw new BraceWithoutEndException();
     }
     
     public boolean check(String s) throws Exception{
-        this.s = s;
+        
         boolean res = true;
-        leng = s.length();
-        while(res && p < leng){
-            switch(s.charAt(p)){
-                case '(': stack.push(new Brace(BraceType.ROUND));
-                          p++;
-                          break;
-                
-                case ')': if(stack.pop().gettype() != BraceType.ROUND){res = false;}
-                          p++;
-                          break;
-                    
-                case '[': stack.push(new Brace(BraceType.SQUARE));
-                          p++;
-                          break;
-                    
-                case ']': if(stack.pop().gettype() != BraceType.SQUARE){res = false;}
-                          p++;
-                          break;
-                    
-                case '<': p++;
-                          Brace b = readXml();
-                          if(b.gettype() == BraceType.XML_OP){
-                              stack.push(b);
-                          }
-                          if(b.gettype() == BraceType.XML_CL){
-                              Brace frSt = stack.pop();
-                              if(frSt.gettype() != BraceType.XML_OP &&
-                               !((XmlOpen)frSt).getname().equals(((XmlClose)b).getname())){
-                                  res = false;
+        
+        if(s!=null){
+            this.s = s;
+            leng = s.length();
+        
+            while(res && p < leng){
+                switch(s.charAt(p)){
+                    case '(': stack.push(new Brace(BraceType.ROUND));
+                              p++;
+                              break;
+
+                    case ')': if(((Brace)stack.pop()).gettype() != BraceType.ROUND){res = false;}
+                              p++;
+                              break;
+
+                    case '[': stack.push(new Brace(BraceType.SQUARE));
+                              p++;
+                              break;
+
+                    case ']': if(((Brace)stack.pop()).gettype() != BraceType.SQUARE){res = false;}
+                              p++;
+                              break;
+
+                    case '<': p++;
+                              Brace b = readXml();
+                              if(b.gettype() == BraceType.XML_OP){
+                                  stack.push(b);
                               }
-                          }
-                          break;
-                
-                default: p++;
-                         break;
-                 
+                              if(b.gettype() == BraceType.XML_CL){
+                                  Brace fromStack = (Brace)stack.pop();
+                                  BraceType t = fromStack.gettype();
+                                  if(t != BraceType.XML_OP){
+                                      res = false;
+                                      break;
+                                  }
+                                  String fsname = ((XmlOpen)fromStack).getname();
+                                  String bname = ((XmlClose)b).getname();
+                                  if(!fsname.equals(bname)){
+                                      System.out.println(fsname+" "+bname);
+                                      res = false;
+                                  }
+                              }
+                              break;
+
+                    default: p++;
+                             break;
+
+                }
             }
         }
-        
-        if(stack.pop().gettype() != BraceType.NONE){
+        if(!stack.empty()){
             res = false;
         }
         

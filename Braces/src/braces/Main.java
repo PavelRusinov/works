@@ -11,12 +11,8 @@ public class Main {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         String str = in.readLine();
         CheckBraces s = new CheckBraces();
-        if(str == null) {
-            System.out.print(true);
-        }
-        else {
-            System.out.print(s.check(str));
-        }
+        System.out.print(s.check(str));
+        
     
     }
     
