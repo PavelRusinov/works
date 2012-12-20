@@ -5,18 +5,20 @@ public class Cloud {
     private IDaylight daylight;
     private ILuminary luminary;
     private IWind wind;
+    private IMagic magic;
     
-    public Cloud(IDaylight d, ILuminary l, IWind w){
+    public Cloud(IDaylight d, ILuminary l, IWind w, IMagic m){
         daylight = d;
         luminary = l;
         wind = w;
+        magic = m;
     }
     
-    private Creature internalCreate() throws NotImplementedException
+    private Creature internalCreate()
     {
         boolean currentLuminary = luminary.isShining();
         DaylightType currentDaylight = daylight.current();
-        int currentWindStr = wind.WindStrength();
+        int currentWindStr = wind.windStrength();
         
         if (currentLuminary){
           if(currentDaylight == DaylightType.Morning){
@@ -105,21 +107,20 @@ public class Cloud {
           }
       }
  
-
-      throw new NotImplementedException();
+      return null;
+      //throw new NotImplementedException();
     }
 
  
 
-    public Creature create() throws NotImplementedException
+    public Creature create()
     {
       Creature creature = internalCreate();
-      IMagic magic = new Magic();
       switch (creature.getCreatureType()) {
           case Puppy:                
           case Piglet:               
           case Baloon:                    
-              magic.callDeamon(creature.getCreatureType());  
+              magic.callDaemon(creature.getCreatureType());  
               break;                
           case Kitten:                
           case Hedgehog:                
