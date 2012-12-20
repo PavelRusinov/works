@@ -8,19 +8,19 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class StringWork {
-    private HashTable table;
+    private HashTable<Integer> table;
     public StringWork(int size){
         table = new HashTable(size);
     }
     
     public void add(String s){
         s = s.toLowerCase();
-        Elem n = table.get(s);
+        Integer n = table.get(s);
         if(n == null){
-            table.put(s, (int) 1);
+            table.put(s, 1);
         }
         else{
-            table.put(s,((int) n.getData())+1);
+            table.put(s, n+1);
         }
     }
     
@@ -29,10 +29,10 @@ public class StringWork {
             return 0;
         } else {
             s = s.toLowerCase();
-            Elem e = table.get(s);
+            Integer e = table.get(s);
             
             if (e != null) {
-                return (int)e.getData();
+                return e;
             }
             
             return 0;

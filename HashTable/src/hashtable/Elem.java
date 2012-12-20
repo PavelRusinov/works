@@ -1,11 +1,11 @@
 
 package hashtable;
 
-public class Elem {
+public class Elem<type>{
    protected String key;
-   protected Object data;
+   protected type data;
    
-   public Elem(String k, Object d){
+   public Elem(String k, type d){
        key = k;
        data = d;
    }
@@ -14,11 +14,11 @@ public class Elem {
       return key;
    }
    
-   public Object getData(){
+   public type getData(){
        return data;
    }
    
-   public void setData(Object d){
+   public void setData(type d){
        data = d;
    }
 }

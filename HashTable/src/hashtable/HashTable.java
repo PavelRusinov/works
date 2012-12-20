@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class HashTable {
-    private List<List<Elem>> table = new ArrayList<>();
+public class HashTable<type> {
+    private List<List<Elem<type>>> table = new ArrayList<>();
     int size;
     
     public HashTable(int _size){
         size = _size;
         int i;
         for(i = 0; i < size; i++){
-            table.add(new ArrayList<Elem>());
+            table.add(new ArrayList<Elem<type>>());
         }
     }
     
@@ -28,57 +28,78 @@ public class HashTable {
     }
     
     public void distr(){
-        int max = 0;
-        int min = table.get(0).size();
-        int sum = 0;
-        for(List<Elem> l: table){
-            int n = l.size();
-            if(n > max){
+        int min = Integer.MAX_VALUE;
+        int max = 0 ;
+        int numwords = 0;
+        int n = 0;
+        double stand_dev = 0.0f;
+        double avdev = 0.0f;
+        List<Integer> wordsNumb = new ArrayList<>(size);
+        for(List<Elem<type>> list : table)
+        {
+            for(Elem elem : list)
+            {
+                n ++;
+            }
+            numwords += n;
+            wordsNumb.add(n);
+            if (n > max)
+            {
                 max = n;
             }
-            if(n < min){
+            if (n < min)
+            {
                 min = n;
             }
-            sum += n;
+            n = 0;
         }
-        System.out.println("max=" + max);
-        System.out.println("min=" + min);
-        System.out.println("mean=" + sum/size);
+        for(Integer i : wordsNumb)
+        {
+            avdev += i - numwords/size;
+            stand_dev += (i - numwords/size)^2;
+        }
+        stand_dev = (double) Math.sqrt(stand_dev/size);
+        System.out.println("number of words: " + Integer.toString(numwords));
+        System.out.println("min:" + Integer.toString(min));
+        System.out.println("max:" + Integer.toString(max));
+        System.out.println("average:" + Float.toString(numwords/size));
+        System.out.println("average dev:" + Double.toString(avdev/size));
+        System.out.println("standart dev:" + Double.toString(stand_dev));
     }
     
-    public void put(String s, Object el){
+    public void put(String s, type el){
         if (s != null) {
            int hash = hashFunc(s); 
-           List<Elem> list;
+           List<Elem<type>> list;
+           list = table.get(hash);
            
            if (table.get(hash).isEmpty()) {
-                list = table.get(hash);
                 list.add(new Elem(s, el));
-           } else {
-                list = table.get(hash);
-                for(Elem e : list) {
+           } 
+           else {
+                for(Elem<type> e : list) {
                     if (s.equals(e.key)) {
                         e.data = el;
                         return;
                     }
                 }
                 list.add(new Elem(s, el));
-            }
+           }
         }
     }
     
-    public Elem get(String s){
+    public type get(String s){
         if (s != null) {
            int hash = hashFunc(s); 
-           List<Elem> list;
+           List<Elem<type>> list;
            
            list = table.get(hash);
            if (list.isEmpty()) {
                return null;
            } else {
-               for(Elem e : list) {
+               for(Elem<type> e : list) {
                     if (s.equals(e.key)) {
-                        return e;
+                        return e.getData();
                     }
                 }
            }
@@ -94,7 +115,7 @@ public class HashTable {
                return false;
            }
            else{
-              List<Elem> list = table.get(hash); 
+              List<Elem<type>> list = table.get(hash); 
               for(Elem e:list){
                   if (s.equals(e.key)) {
                         return true;
@@ -109,14 +130,14 @@ public class HashTable {
     public void delete(String s){
          if (s != null) {
            int hash = hashFunc(s); 
-           List<Elem> list = table.get(hash);
+           List<Elem<type>> list = table.get(hash);
            
            if (!list.isEmpty()) {
                Iterator i = list.iterator(); 
-               Elem e;
+               Elem<type> e;
                 
                while(i.hasNext()) {
-                    e = (Elem)i.next();
+                    e = (Elem<type>)i.next();
                     if (s.equals(e.key)) {
                         i.remove();
                         return;
