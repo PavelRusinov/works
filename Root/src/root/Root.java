@@ -14,7 +14,7 @@ public class Root {
         do{
             pr = res;
             res = (res + numb/res)/2;
-        } while (pr != res);
+        } while (Math.abs(pr - res) > 0.0000001*pr);
         return res;
     }
 }
