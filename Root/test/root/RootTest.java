@@ -30,13 +30,16 @@ public class RootTest {
     @Test
     public void Numbers() throws Exception {
         System.out.println("numbers");
-        double numb[] = {0.001, 1.0e20, 1.0e50, 3, 245};
+        double numb[] = {0.001, 1.0e20, 1.0e50, 3, 245, 0.1e-20};
         Root instance = new Root();
-        boolean result = true;
-        boolean expResult = true;
+        double result;
+        double expResult;
         for(double t:numb){
-        result = result && (instance.getRoot(t) == Math.sqrt(t));
+            System.out.println(t);
+            result = instance.getRoot(t);
+            expResult = Math.sqrt(t);
+            assertEquals(expResult, result, instance.getDelta());
         }
-        assertEquals(expResult, result);
     }
+    
 }
