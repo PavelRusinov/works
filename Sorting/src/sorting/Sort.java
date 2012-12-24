@@ -12,7 +12,7 @@ public class Sort {
     }
     
             
-    public void Sort(Object[] A) {
+    private void Sort(Object[] A) {
         int i;
         int j;
         int minNumb;
