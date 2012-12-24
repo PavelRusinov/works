@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 
 public class Mult {
    
-    public class MultThread implements Callable <int[]>{
+    private class MultThread implements Callable <int[]>{
         int[] a;
         int[][] b;
         public MultThread(int[] a, int[][] b){
@@ -57,12 +57,13 @@ public class Mult {
         return true;
     }
     
-    public int[][] multMatr(int [][]a, int [][]b) throws Exception{
+    public int[][] multMatr(int [][]a, int [][]b) throws IllegalArgumentException{
         if(!checkMatr(a,b)){
-            throw new Exception();
+            throw new IllegalArgumentException();
         }
         
-        ExecutorService ex=Executors.newFixedThreadPool(a.length);
+        ExecutorService ex;
+        ex = Executors.newCachedThreadPool();
         ArrayList<Future<int[]>> res = new ArrayList<>();
         int [][] r = new int[a.length][b[0].length];
         int k = -1;
