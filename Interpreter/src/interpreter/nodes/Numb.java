@@ -12,4 +12,9 @@ public class Numb extends Expression{
     public int getValue() {
         return value;
     }
+
+    @Override
+    public Object deepcopy() {
+        return new Numb(value);
+    }
 }

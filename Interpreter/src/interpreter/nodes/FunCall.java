@@ -26,4 +26,9 @@ public class FunCall extends Expression{
     public void setArg(Expression a) {
         arg = a;
     }
+
+    @Override
+    public Object deepcopy() {
+        return new FunCall((Expression)fun.deepcopy(),(Expression)arg.deepcopy());
+    }
 }

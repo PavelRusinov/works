@@ -1,6 +1,7 @@
 
 package interpreter.lexer;
 
+import exceptions.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +32,15 @@ public class Lexer {
     }
     
     private Lexeme readlexem() throws Exception{
-        if(p == expr.length()-1) {
+        if(p > expr.length()-1) {
             eol = true;
         }
         
         while(!eol && expr.charAt(p)== ' ') {
-             if(p == expr.length() - 1) {
+            p++; 
+            if(p > expr.length() - 1) {
                  eol = true;
              }
-             p++;
          }
          
          if(!eol){
@@ -67,20 +68,20 @@ public class Lexer {
                     default: if(Character.isDigit(expr.charAt(p))){
                                  int i = p;
                                  while(!eol && Character.isDigit(expr.charAt(p))) {
-                                     if(p == expr.length()-1) {
-                                        eol = true;
+                                        p++;
+                                        if(p > expr.length()-1) {
+                                           eol = true;
                                      }
-                                     p++;
                                  }
                                  return new NumbLexem(Integer.parseInt(expr.substring(i, p)));
                              }
                              if(Character.isLetter(expr.charAt(p))){
                                     int i = p;
                                     while(!eol && Character.isLetterOrDigit(expr.charAt(p))) {
-                                        if(p == expr.length()-1) {
+                                        p++;
+                                        if(p > expr.length()-1) {
                                            eol = true;
                                         }
-                                        p++;
                                     }
                                     String n = expr.substring(i, p);
                                     switch (n.toLowerCase()) {
@@ -96,7 +97,7 @@ public class Lexer {
                                         
                              }
                              else {
-                                    throw new Exception();
+                                    throw new UnexpectedCharException();
                              }             
                 }
         }

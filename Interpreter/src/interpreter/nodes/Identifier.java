@@ -12,4 +12,9 @@ public class Identifier extends Expression{
     public String getName() {
         return name;
     } 
+
+    @Override
+    public Object deepcopy() {
+        return new Identifier(name);
+    }
 }

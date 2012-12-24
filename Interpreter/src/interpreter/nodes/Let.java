@@ -32,4 +32,9 @@ public class Let extends Expression{
     public void setExpr(Expression e) {
         expr = e;
     }
+
+    @Override
+    public Object deepcopy() {
+        return new Let(id, (Expression)bound.deepcopy(),(Expression)expr.deepcopy());
+    }
 }

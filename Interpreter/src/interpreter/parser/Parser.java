@@ -1,6 +1,7 @@
 
 package interpreter.parser;
 
+import exceptions.*;
 import interpreter.lexer.*;
 import interpreter.nodes.*;
 
@@ -33,12 +34,12 @@ public class Parser {
     private Node parseFun() throws Exception{
         nextlexem();
         if(currlexem.getType() != LexemType.ID){
-            //exception
+            throw new UnexpectedLexemException();
         }
         String id = ((IdLexem)currlexem).getName();
         nextlexem();
         if(currlexem.getType() != LexemType.ARROW){
-            //exception
+            throw new UnexpectedLexemException();
         }
         nextlexem();
         return new FunDef(id, (Expression) parse());
@@ -47,17 +48,17 @@ public class Parser {
     private Node parseLet() throws Exception{
         nextlexem();
         if(currlexem.getType() != LexemType.ID){
-            //exception
+            throw new UnexpectedLexemException();
         }
         String id = ((IdLexem)currlexem).getName();
         nextlexem();
         if(currlexem.getType() != LexemType.ASSIGN){
-            //exception
+            throw new UnexpectedLexemException();
         }
         nextlexem();
         Expression bound = (Expression) parse();
         if(currlexem.getType() != LexemType.IN){
-            //exception
+            throw new UnexpectedLexemException();
         }
         nextlexem();
         Expression expr = (Expression) parse();
@@ -91,6 +92,10 @@ public class Parser {
     }
 
     private Node factor() throws Exception{
+        return funcall();
+    }
+    
+    private Node funcall() throws Exception{
         Node n = primary();
         while(currlexem.getType() == LexemType.ID || 
               currlexem.getType() == LexemType.OBRACE ||
@@ -113,11 +118,11 @@ public class Parser {
             case OBRACE: nextlexem();
                          Node n = parse();
                          if(currlexem.getType() != LexemType.CLBRACE){
-                             //exception
+                             throw new NoClBraceException();
                          }
                          nextlexem();
                          return n;
         }
-        throw new Exception();
+        throw new UnexpectedLexemException();
     }
 }

@@ -1,6 +1,6 @@
 
 package interpreter.nodes;
 
-public class Node {
-    
+public abstract class Node {
+    abstract public Object deepcopy();
 }

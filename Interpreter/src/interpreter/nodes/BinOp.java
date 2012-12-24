@@ -34,6 +34,10 @@ public class BinOp extends Expression{
     public void setLeft(Expression l) {
         left = l;
     }
+    @Override
+    public Expression deepcopy(){
+        return new BinOp(op, (Expression)left.deepcopy(), (Expression)right.deepcopy());
+    }
 
 
 }

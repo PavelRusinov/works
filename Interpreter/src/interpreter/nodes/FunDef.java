@@ -22,4 +22,9 @@ public class FunDef extends Expression{
     public void setBody(Expression b) {
         body = b;
     }
+
+    @Override
+    public Object deepcopy() {
+        return new FunDef(id,(Expression)body.deepcopy());
+    }
 }
