@@ -15,7 +15,7 @@ public class Parser {
         h = new HashTable(500);
     }
     
-    private int factor() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException{
+    private int factor() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException{
         if(lexer.getCurrLexem() == LexemValue.NUMBER){
              int res = lexer.getLexemValue();
              lexer.nextlexem();
@@ -23,7 +23,7 @@ public class Parser {
         }
         else if(lexer.getCurrLexem() == LexemValue.VAR){
              if(!h.isInTable(lexer.getVariableName())){
-                 throw new NoOperatorException();
+                 throw new UnknownIdException();
              }
              int res = (int) h.get(lexer.getVariableName()).getData();
              lexer.nextlexem();
@@ -46,7 +46,7 @@ public class Parser {
         }
     }
 
-    private int term() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException {
+    private int term() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException {
         int left = factor();
 
         while(lexer.getCurrLexem() == LexemValue.MULT || lexer.getCurrLexem() == LexemValue.DIV){
@@ -64,7 +64,7 @@ public class Parser {
         return left;
     }
 
-    private int expr() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException {
+    private int expr() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException {
         int left = term();
 
         while(lexer.getCurrLexem() == LexemValue.PLUS || lexer.getCurrLexem() == LexemValue.MINUS){
@@ -80,29 +80,38 @@ public class Parser {
         return left;
     }
 
-    public int[] parse() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException{
+    private int parseAssign() throws Exception{
+        lexer.nextlexem();
+        lexer.nextlexem();
+        int res = expr();
+        if (!lexer.eol()){
+            throw new NoOperatorException();
+        }
+        return res;
+    }
+    
+    private int parseExpr() throws Exception{
+        int res = expr();
+            if (!lexer.eol()){
+                throw new NoOperatorException();
+            }
+        return res;
+    }
+    
+    public int[] parse() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException, Exception{
         int l = expressions.length;
         int result[] = new int[l];
         int i;
         for(i = 0; i < l; i++){
-            lexer.newExpr(expressions[i]+"\n");
+            lexer.newExpr(expressions[i]);
             lexer.nextlexem();
             if(lexer.futurelexem() == LexemValue.EQS){
                 String id = lexer.getVariableName();
-                lexer.nextlexem();
-                lexer.nextlexem();
-                int res = expr();
-                if (lexer.getCurrLexem() != LexemValue.EOL){
-                    throw new NoOperatorException();
-                }
+                int res = parseAssign();
                 h.put(id, (int) res);
                 result[i] = res;
             }else{
-                int res = expr();
-                if (lexer.getCurrLexem() != LexemValue.EOL){
-                    throw new NoOperatorException();
-                }
-                result[i] = res;
+                result[i] = parseExpr();
             }
         }
         return result;

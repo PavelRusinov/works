@@ -8,23 +8,36 @@ public class Lexer {
     private int p;
     private int NumberValue;
     private String VarName;
-    protected String Exp;
+    private boolean eol;
+    protected String exp;
     
     public Lexer(){
         currlexem = LexemValue.START;
+        eol = false;
     }
     
     public void newExpr(String e){
-        Exp = e;
+        eol = false;
+        exp = e;
         currlexem = LexemValue.START;
         p = 0;
     }
     
     public void nextlexem() throws InvalidCharException
     {
-            while(Exp.charAt(p)== ' ') {p++;}
+            if(p > exp.length()-1) {
+                eol = true;
+            }
             
-            switch(Exp.charAt(p)){
+            while(!eol && exp.charAt(p)== ' ') {
+                p++; 
+                if(p > exp.length() - 1) {
+                     eol = true;
+                 }
+             }
+            
+            if(!eol){
+                switch(exp.charAt(p)){
                     case '+': currlexem = LexemValue.PLUS;
                                   p++;
                                   break;
@@ -46,40 +59,50 @@ public class Lexer {
                     case ')': currlexem = LexemValue.CBRACE;
                                   p++;
                                   break;
-                    case '\n': currlexem = LexemValue.EOL;
+                    case '\n':    eol = true;
                                   p++;
                                   break;
-                    case '.': currlexem = LexemValue.EOL;
-                                  p++;
-                                  break;
-                    default: if(Character.isDigit(Exp.charAt(p))){
+                    default: if(Character.isDigit(exp.charAt(p))){
                                  currlexem = LexemValue.NUMBER;
                                  int i = p;
-                                 while(Character.isDigit(Exp.charAt(p))) {p++;}
-                                 NumberValue = Integer.parseInt(Exp.substring(i, p));
+                                 while(!eol && Character.isDigit(exp.charAt(p))) {
+                                     p++;
+                                     if(p > exp.length()-1) {
+                                        eol = true;
+                                     }
+                                 }
+                                 NumberValue = Integer.parseInt(exp.substring(i, p));
                                  break;
                              }
-                             if(Character.isLetter(Exp.charAt(p))){
+                             if(Character.isLetter(exp.charAt(p))){
                                     currlexem = LexemValue.VAR;
                                     int i = p;
-                                    while(Character.isLetterOrDigit(Exp.charAt(p))) {p++;}
-                                    VarName = Exp.substring(i, p);
-                                   break;
+                                    while(!eol && Character.isLetterOrDigit(exp.charAt(p))) {
+                                        p++;
+                                        if(p > exp.length()-1) {
+                                                eol = true;
+                                        }
+                                    }
+                                    VarName = exp.substring(i, p);
+                                    break;
                              }
                              else {
                                     throw new InvalidCharException();
                              }             
-                }
+                      }
+              }
     }
     
     public LexemValue futurelexem() throws InvalidCharException
     {
+        boolean e = eol;
         LexemValue c = currlexem;
         int i = p;
         int n = NumberValue;
         String v = VarName;
         nextlexem();
         LexemValue next = currlexem;
+        eol = e;
         currlexem = c;
         p = i;
         NumberValue = n;
@@ -97,5 +120,9 @@ public class Lexer {
     
     public LexemValue getCurrLexem(){
         return currlexem;
+    }
+    
+    public boolean eol(){
+        return eol;
     }
 }
