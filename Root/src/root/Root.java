@@ -2,7 +2,7 @@
 package root;
 
 public class Root {
-    private final double delta = 0.0000000001;
+    private final Double delta = Double.MIN_VALUE;
     public double getRoot(double numb) throws Exception{
         if(numb < 0) {
             throw new IllegalArgumentException("число меньше 0");
@@ -15,7 +15,8 @@ public class Root {
         do{
             pr = res;
             res = (res + numb/res)/2;
-        } while (Math.abs(pr - res) > delta*pr);
+            
+        } while (Math.abs(pr - res) > delta);
         return res;
     }
     

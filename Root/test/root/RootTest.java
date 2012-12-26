@@ -38,7 +38,7 @@ public class RootTest {
             System.out.println(t);
             result = instance.getRoot(t);
             expResult = Math.sqrt(t);
-            assertEquals(expResult, result, instance.getDelta());
+            assertEquals(expResult, result, expResult*0.00000000001);
         }
     }
     
