@@ -6,20 +6,24 @@ import interpreter.lexer.*;
 import interpreter.nodes.*;
 
 public class Parser {
-    Lexer lexer;
-    Lexeme currlexem;
+    private Lexer lexer;
+    private Lexeme currlexem;
     
-    public Parser(String e) throws Exception{
-        lexer = new Lexer(e);
+    public Parser() throws Exception{
+        
     }
     
     private void nextlexem(){
         this.currlexem = lexer.nextlexem();
     }
     
-    public Node parseExpr() throws Exception{
+    public Node parseExpr(String e) throws Exception{
+        lexer = new Lexer(e);
         nextlexem();
         Node res = parse();
+        if(currlexem.getType() != LexemType.END){
+            throw new IllegalEndOfExprException();
+        }
         return res;
     }
     

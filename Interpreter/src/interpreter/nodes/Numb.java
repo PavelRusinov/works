@@ -17,4 +17,9 @@ public class Numb extends Expression{
     public Object deepcopy() {
         return new Numb(value);
     }
+    
+    @Override
+    public String toString(){
+        return Integer.toString(value);
+    }
 }

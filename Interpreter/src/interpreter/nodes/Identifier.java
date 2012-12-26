@@ -17,4 +17,9 @@ public class Identifier extends Expression{
     public Object deepcopy() {
         return new Identifier(name);
     }
+    
+    @Override
+    public String toString(){
+        return name;
+    }
 }

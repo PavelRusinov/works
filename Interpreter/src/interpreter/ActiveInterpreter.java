@@ -4,7 +4,7 @@ package interpreter;
 import exceptions.*;
 import interpreter.nodes.*;
 
-public class NormalInterpreter extends Interpreter{
+public class ActiveInterpreter extends Interpreter{
 
     @Override
     Expression eval(FunCall func) throws Exception {
@@ -16,8 +16,7 @@ public class NormalInterpreter extends Interpreter{
         
         FunDef fun = (FunDef)f;
         
-        Expression res = eval(substitute(fun.getBody(), fun.getId(), func.getArg()));
-        return res;
+        return eval(substitute(fun.getBody(), fun.getId(), eval(func.getArg())));
     }
 
     @Override

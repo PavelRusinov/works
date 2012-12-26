@@ -27,4 +27,9 @@ public class FunDef extends Expression{
     public Object deepcopy() {
         return new FunDef(id,(Expression)body.deepcopy());
     }
+    
+    @Override
+    public String toString(){
+        return "(fun " + id + " -> " + body.toString() + ")";
+    }
 }

@@ -6,6 +6,8 @@ import interpreter.nodes.*;
 
 public abstract class Interpreter {
     
+    protected int evalCounter;
+    
     public Expression substitute(Expression expr, String id, Expression x) throws Exception{
         switch(expr.getType()){
             case BINOP: 
@@ -42,10 +44,11 @@ public abstract class Interpreter {
                 }
                 return l;
         }
-        return null;
+        throw new UnexpectedTypeException();
     }
     
-    public Expression eval(Expression expr) throws Exception {
+    protected Expression eval(Expression expr) throws Exception {
+        evalCounter++;
         switch (expr.getType()) {
             case BINOP: return eval((BinOp)expr);
             case IDENTIFIER: return eval((Identifier)expr);
@@ -54,7 +57,7 @@ public abstract class Interpreter {
             case NUMBER: return eval((Numb)expr);
             case LET: return eval((Let)expr);
         }
-        return null;
+        throw new UnexpectedTypeException();
     }
     
     private Expression eval(Numb n){
@@ -86,10 +89,19 @@ public abstract class Interpreter {
                       }
                 return new Numb(((Numb)left).getValue()/((Numb)right).getValue());
         }
-        return null;
+        throw new UnexpectedTypeException();
+    }
+    
+    public Expression evalExpr(Expression e) throws Exception{
+        evalCounter = 0;
+        return eval(e);
     }
     
     abstract Expression eval(FunCall func) throws Exception;
     abstract Expression eval(Let l) throws Exception;
+    
+    public int getCounter(){
+        return evalCounter;
+    }
     
 }

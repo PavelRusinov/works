@@ -37,4 +37,9 @@ public class Let extends Expression{
     public Object deepcopy() {
         return new Let(id, (Expression)bound.deepcopy(),(Expression)expr.deepcopy());
     }
+    
+    @Override
+    public String toString(){
+        return "(let " + id + " = (" + bound.toString() + ")" + " in (" + expr.toString() + "))";
+    }
 }

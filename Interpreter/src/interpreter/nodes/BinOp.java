@@ -38,6 +38,19 @@ public class BinOp extends Expression{
     public Expression deepcopy(){
         return new BinOp(op, (Expression)left.deepcopy(), (Expression)right.deepcopy());
     }
-
-
+    
+    public String opString(Operator o){
+        switch(o){
+            case PLUS: return "+";
+            case MINUS: return "-";
+            case DIV: return "/";
+            case MULT: return "*";
+        }
+        return "";
+    }
+    
+    @Override
+    public String toString(){
+        return "(" + left.toString() + opString(op) + right.toString() + ")";
+    }
 }

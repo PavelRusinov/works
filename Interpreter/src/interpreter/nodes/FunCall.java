@@ -31,4 +31,9 @@ public class FunCall extends Expression{
     public Object deepcopy() {
         return new FunCall((Expression)fun.deepcopy(),(Expression)arg.deepcopy());
     }
+    
+    @Override
+    public String toString(){
+        return "(call " + fun.toString() + " (" + arg.toString() + "))";
+    }
 }
