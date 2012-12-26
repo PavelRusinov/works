@@ -11,5 +11,6 @@ public enum LexemValue {
     NUMBER,
     OBRACE,
     CBRACE,
-    START
+    START,
+    EOL
 }

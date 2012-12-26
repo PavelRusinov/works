@@ -15,7 +15,7 @@ public class Parser {
         h = new HashTable(500);
     }
     
-    private int factor() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException{
+    private int factor() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException, Exception{
         if(lexer.getCurrLexem() == LexemValue.NUMBER){
              int res = lexer.getLexemValue();
              lexer.nextlexem();
@@ -46,7 +46,7 @@ public class Parser {
         }
     }
 
-    private int term() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException {
+    private int term() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException, Exception {
         int left = factor();
 
         while(lexer.getCurrLexem() == LexemValue.MULT || lexer.getCurrLexem() == LexemValue.DIV){
@@ -64,7 +64,7 @@ public class Parser {
         return left;
     }
 
-    private int expr() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException {
+    private int expr() throws InvalidCharException, NoClBracketException, NoOperandException, DivByZeroException, NoOperatorException, UnknownIdException, Exception {
         int left = term();
 
         while(lexer.getCurrLexem() == LexemValue.PLUS || lexer.getCurrLexem() == LexemValue.MINUS){
@@ -84,16 +84,16 @@ public class Parser {
         lexer.nextlexem();
         lexer.nextlexem();
         int res = expr();
-        if (!lexer.eol()){
-            throw new NoOperatorException();
+        if (!(lexer.getCurrLexem() == LexemValue.EOL)){
+            throw new IncorrectEndOfExprException();
         }
         return res;
     }
     
     private int parseExpr() throws Exception{
         int res = expr();
-            if (!lexer.eol()){
-                throw new NoOperatorException();
+            if (!(lexer.getCurrLexem() == LexemValue.EOL)){
+                throw new IncorrectEndOfExprException();
             }
         return res;
     }
@@ -105,7 +105,7 @@ public class Parser {
         for(i = 0; i < l; i++){
             lexer.newExpr(expressions[i]);
             lexer.nextlexem();
-            if(lexer.futurelexem() == LexemValue.EQS){
+            if(lexer.getCurrLexem() == LexemValue.VAR && lexer.futurelexem() == LexemValue.EQS){
                 String id = lexer.getVariableName();
                 int res = parseAssign();
                 h.put(id, (int) res);

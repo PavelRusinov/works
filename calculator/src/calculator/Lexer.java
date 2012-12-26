@@ -1,7 +1,7 @@
 
 package calculator;
 
-import exceptions.InvalidCharException;
+import exceptions.*;
 
 public class Lexer {
     private LexemValue currlexem;
@@ -90,7 +90,7 @@ public class Lexer {
                                     throw new InvalidCharException();
                              }             
                       }
-              }
+              } else {currlexem = LexemValue.EOL;}
     }
     
     public LexemValue futurelexem() throws InvalidCharException
@@ -110,19 +110,21 @@ public class Lexer {
         return next;
     }
     
-    public int getLexemValue(){
-        return NumberValue;
+    public int getLexemValue() throws Exception{
+        if(currlexem == LexemValue.NUMBER){
+            return NumberValue;
+        }
+        else {throw new IncorrectInvokeException();}
     }
     
-    public String getVariableName(){
-        return VarName;
+    public String getVariableName() throws Exception{
+        if(currlexem == LexemValue.VAR){
+            return VarName;
+        }
+        else {throw new IncorrectInvokeException();}
     }
     
     public LexemValue getCurrLexem(){
         return currlexem;
-    }
-    
-    public boolean eol(){
-        return eol;
     }
 }
